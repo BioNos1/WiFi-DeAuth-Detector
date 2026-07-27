@@ -1,6 +1,6 @@
 # WiFi DeAuth Detector
 
-![WiFi DeAuth Detector Banner](deg.png)
+![WiFi DeAuth Detector Banner](banner.png)
 
 ## Overview
 
