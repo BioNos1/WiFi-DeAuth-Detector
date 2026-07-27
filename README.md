@@ -1,6 +1,6 @@
 # WiFi DeAuth Detector
 
-![WiFi DeAuth Detector Banner](<img width="2816" height="1536" alt="banner" src="https://github.com/user-attachments/assets/a907af0c-f8a4-4ec2-afd1-5ea09bddc4d3" />
+(<img width="2816" height="1536" alt="banner" src="https://github.com/user-attachments/assets/a907af0c-f8a4-4ec2-afd1-5ea09bddc4d3" />
 
 ## Overview
 
