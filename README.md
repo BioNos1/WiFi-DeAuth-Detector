@@ -1,6 +1,6 @@
 # WiFi DeAuth Detector
 
-![Project Banner](WIRING.png)
+![WiFi DeAuth Detector Banner](banner.png)
 
 ## Overview
 
