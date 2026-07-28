@@ -95,3 +95,89 @@ The device analyzes Wi-Fi management frames and identifies patterns associated w
 3. Install the required libraries.
 4. Download this repository.
 5. Open:
+
+
+> **Note**
+>
+> By default, the detector counts every **Deauthentication** and **Disassociation** frame it captures, regardless of which Wi-Fi network the packets belong to. In environments with multiple nearby access points, this can result in alerts triggered by activity unrelated to the network you intend to monitor.
+> To improve accuracy, the detector can be configured to monitor a **specific Wi-Fi Access Point (AP)** by filtering packets using its **BSSID (MAC address)**. With this feature enabled, only management frames associated with the selected access point are counted, reducing false positives and making the detector more suitable for monitoring a single network.
+## Target BSSID Filtering
+
+This project supports monitoring a **specific Wi-Fi Access Point (AP)** by filtering captured IEEE 802.11 management frames using the access point's **BSSID (MAC address)**.
+
+Instead of counting every deauthentication or disassociation frame detected nearby, the detector can be configured to monitor only a selected network. This reduces false positives and improves detection accuracy.
+
+### Configure the Target BSSID
+
+Replace the placeholder MAC address with your router's actual BSSID.
+
+Example BSSID: 3C:84:6A:12:34:56 
+const uint8_t TARGET_BSSID[6] = {
+  0x3C, 0x84, 0x6A, 0x12, 0x34, 0x56
+}; // this is example how to specify your mac address
+
+```cpp
+// ===== Target Network ===== //
+// Replace with your router's MAC address (BSSID)
+const uint8_t TARGET_BSSID[6] = {
+  0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF  
+};
+```
+
+### MAC Address Comparison Function
+
+```cpp
+bool compareMAC(const uint8_t *mac1, const uint8_t *mac2) {
+  for (int i = 0; i < 6; i++) {
+    if (mac1[i] != mac2[i]) return false;
+  }
+  return true;
+}
+```
+
+### Updated Packet Sniffer
+
+Replace your existing `sniffer()` function with the following implementation:
+
+```cpp
+void sniffer(uint8_t *buf, uint16_t len) {
+
+  if (!buf || len < 28)
+    return;
+
+  // Frame Control field
+  uint16_t frameControl = buf[0] | (buf[1] << 8);
+
+  // Management subtype
+  uint8_t subtype = (frameControl >> 4) & 0x0F;
+
+  // Only Deauthentication (12) and Disassociation (10)
+  if (subtype != 10 && subtype != 12)
+    return;
+
+  // IEEE 802.11 Management Frame
+  const uint8_t *addr1 = &buf[4];   // Destination
+  const uint8_t *addr2 = &buf[10];  // Source
+  const uint8_t *addr3 = &buf[16];  // BSSID
+
+  // Count only packets involving our target AP
+  if (compareMAC(addr2, TARGET_BSSID) ||
+      compareMAC(addr3, TARGET_BSSID)) {
+
+    packet_rate++;
+
+    Serial.print("Target packet detected: ");
+    Serial.println(packet_rate);
+  }
+}
+```
+
+### How It Works
+
+* The detector captures IEEE 802.11 management frames in promiscuous mode.
+* Only **Deauthentication** and **Disassociation** frames are processed.
+* The firmware compares the frame's **Source Address** and **BSSID** with the configured `TARGET_BSSID`.
+* If either address matches the configured access point, the packet is counted.
+* When the number of detected packets exceeds the configured threshold, the TFT display and buzzer alert the user.
+
+> **Note:** Replace the placeholder BSSID with the MAC address of the access point you want to monitor.
