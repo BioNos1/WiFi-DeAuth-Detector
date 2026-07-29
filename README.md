@@ -1,6 +1,6 @@
 # WiFi DeAuth Detector
 
-<img width="2816" height="1536" alt="banner" src="https://github.com/user-attachments/assets/a907af0c-f8a4-4ec2-afd1-5ea09bddc4d3" />
+
 
 ## Overview
 
@@ -181,3 +181,12 @@ void sniffer(uint8_t *buf, uint16_t len) {
 * When the number of detected packets exceeds the configured threshold, the TFT display and buzzer alert the user.
 
 > **Note:** Replace the placeholder BSSID with the MAC address of the access point you want to monitor.
+
+Future Updates
+
+This project will continue to evolve with new features and enhancements. Planned updates include:
+
+Integration of Bluetooth (BLE) functionality for local wireless monitoring and notifications.
+A web-based alarm and monitoring dashboard for real-time attack alerts, device status, and event logging.
+Further optimization of the detection algorithm to improve accuracy and reduce false positives.
+Additional customization options and enhanced user interface features.
